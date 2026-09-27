@@ -1,5 +1,7 @@
 dario.cat/mergo v1.0.2 h1:85+piFYR1tMbRrLcDwR18y4UKJ3aH1Tbzi24VRW1TK8=
 dario.cat/mergo v1.0.2/go.mod h1:E/hbnu0NxMFBjpMIE34DRGLWqDy0g5FuKDhCb31ngxA=
+filippo.io/edwards25519 v1.2.0 h1:crnVqOiS4jqYleHd9vaKZ+HKtHfllngJIiOpNpoJsjo=
+filippo.io/edwards25519 v1.2.0/go.mod h1:xzAOLCNug/yB62zG1bQ8uziwrIqIuxhctzJT18Q77mc=
 github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6 h1:He8afgbRMd7mFxO99hRNu+6tazq8nFF9lIwo9JFroBk=
 github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6/go.mod h1:8o94RPi1/7XTJvwPpRSzSUedZrtlirdB3r9Z20bi2f8=
 github.com/Azure/go-ansiterm v0.0.0-20250102033503-faa5f7b0171c h1:udKWzYgxTojEKWjV8V+WSxDXJ4NFATAsZjh8iIbsQIg=
@@ -147,6 +149,8 @@ github.com/go-playground/universal-translator v0.18.1 h1:Bcnm0ZwsGyWbCzImXv+pAJn
 github.com/go-playground/universal-translator v0.18.1/go.mod h1:xekY+UJKNuX9WP91TpwSH2VMlDf28Uj24BCp08ZFTUY=
 github.com/go-playground/validator/v10 v10.30.3 h1:4MU6YkEwx7GbcPJOZxrtbu+QfF3pJLJuaYTeAH0DYy8=
 github.com/go-playground/validator/v10 v10.30.3/go.mod h1:4Axh7oCNGcoGkqLoE4YWt6n20mcEIsPRlB7vPk3lpyc=
+github.com/go-sql-driver/mysql v1.10.1 h1:arlSnNLq6a5yxGxV7qg9lF4j0C+KwD6NbQyKr9QL6ME=
+github.com/go-sql-driver/mysql v1.10.1/go.mod h1:M+cqaI7+xxXGG9swrdeUIoPG3Y3KCkF0pZej+SK+nWk=
 github.com/go-viper/mapstructure/v2 v2.5.0 h1:vM5IJoUAy3d7zRSVtIwQgBj7BiWtMPfmPEgAXnvj1Ro=
 github.com/go-viper/mapstructure/v2 v2.5.0/go.mod h1:oJDH3BJKyqBA2TXFhDsKDGDTlndYOZ6rGS0BRZIxGhM=
 github.com/goccy/go-json v0.10.6 h1:p8HrPJzOakx/mn/bQtjgNjdTcN+/S6FcG2CTtQOrHVU=
@@ -348,10 +352,6 @@ github.com/zeebo/xxh3 v1.1.0 h1:s7DLGDK45Dyfg7++yxI0khrfwq9661w9EN78eP/UZVs=
 github.com/zeebo/xxh3 v1.1.0/go.mod h1:IisAie1LELR4xhVinxWS5+zf1lA4p0MW4T+w+W07F5s=
 go.kenn.io/docbank v0.14.0 h1:qzkCnFIAKucpZIvblMouEV948MyjX+p49F+pqPtB5bk=
 go.kenn.io/docbank v0.14.0/go.mod h1:sd4cATphlFCUU/Ea6VlB+LnFKFt18mbPvkDijhG42h4=
-go.kenn.io/kit v0.25.1-0.20260918202731-04a175847323 h1:MZX6PReFoO7BG5gVDlb6ectwm0IcNoeF3HFgpoDC/F8=
-go.kenn.io/kit v0.25.1-0.20260918202731-04a175847323/go.mod h1:JJN5uFf93goZI0+NV5UrGDd3N0+yJ04a1uzyPlx+R+g=
-go.kenn.io/kit v0.25.1-0.20260921100640-57a958d99909 h1:/kidHXs7ef6bmASbJKT5gwvD4g5EoCtfizQ2K9WR4xY=
-go.kenn.io/kit v0.25.1-0.20260921100640-57a958d99909/go.mod h1:JJN5uFf93goZI0+NV5UrGDd3N0+yJ04a1uzyPlx+R+g=
 go.kenn.io/kit v0.25.1-0.20260922102214-70ff6b6032c5 h1:okCzYkfvutMq/T/Pj4cXSb9pxQQT7coi7kSNs8/cAo0=
 go.kenn.io/kit v0.25.1-0.20260922102214-70ff6b6032c5/go.mod h1:JJN5uFf93goZI0+NV5UrGDd3N0+yJ04a1uzyPlx+R+g=
 go.opentelemetry.io/auto/sdk v1.2.1 h1:jXsnJ4Lmnqd11kwkBV2LgLoFMZKizbCi5fNZ/ipaZ64=

@@ -24,6 +24,7 @@ import (
 
 	"go.kenn.io/agentsview/internal/config"
 	"go.kenn.io/agentsview/internal/db"
+	"go.kenn.io/agentsview/internal/fleet"
 	"go.kenn.io/agentsview/internal/insight"
 	"go.kenn.io/agentsview/internal/parser"
 	"go.kenn.io/agentsview/internal/pricingrefresh"
@@ -95,6 +96,11 @@ type Server struct {
 	dataDir               string
 
 	httpRemoteCleanupRegistry *remotesync.CleanupRegistry
+
+	// fleet is the fleet ledger reader, opened on first use from cfg.Fleet
+	// (tests may set it directly). fleetMu guards lazy initialization.
+	fleet   fleet.Ledger
+	fleetMu gosync.Mutex
 
 	// baseCtx, when set, is used as the base context for all
 	// incoming requests. Cancelling it causes SSE handlers to

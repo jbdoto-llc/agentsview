@@ -66,6 +66,7 @@
   import QualityPage from "./lib/components/quality/QualityPage.svelte";
   import PinnedPage from "./lib/components/pinned/PinnedPage.svelte";
   import TrashPage from "./lib/components/trash/TrashPage.svelte";
+  import StoriesPage from "./lib/components/stories/StoriesPage.svelte";
   import RecentEditsPage from "./lib/components/recentedits/RecentEditsPage.svelte";
   import DataPage from "./lib/components/data/DataPage.svelte";
   import SettingsPage from "./lib/components/settings/SettingsPage.svelte";
@@ -832,6 +833,10 @@
 {:else if router.route === "pinned"}
   <div class="page-scroll">
     <PinnedPage />
+  </div>
+{:else if router.route === "stories"}
+  <div class="page-scroll">
+    <StoriesPage />
   </div>
 {:else if router.route === "trash"}
   <div class="page-scroll">

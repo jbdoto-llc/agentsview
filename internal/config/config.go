@@ -812,6 +812,7 @@ type Config struct {
 	DuckDB               DuckDBConfig                `json:"duckdb,omitempty" toml:"duckdb"`
 	Vector               VectorConfig                `json:"vector,omitempty" toml:"vector"`
 	Recall               RecallConfig                `json:"recall,omitempty" toml:"recall"`
+	Fleet                FleetConfig                 `json:"fleet,omitempty" toml:"fleet"`
 	Insights             InsightsConfig              `json:"insights,omitempty" toml:"insights"`
 	Automated            AutomatedConfig             `json:"automated,omitempty" toml:"automated"`
 	Agent                map[string]AgentConfig      `json:"agent,omitempty" toml:"agent"`
@@ -1610,6 +1611,7 @@ func (c *Config) applyConfigTOML(data string) error {
 		DuckDB                         DuckDBConfig           `toml:"duckdb"`
 		Vector                         VectorConfig           `toml:"vector"`
 		Recall                         RecallConfig           `toml:"recall"`
+		Fleet                          FleetConfig            `toml:"fleet"`
 		Insights                       InsightsConfig         `toml:"insights"`
 		Automated                      AutomatedConfig        `toml:"automated"`
 		Agent                          map[string]AgentConfig `toml:"agent"`
@@ -1877,6 +1879,11 @@ func (c *Config) applyConfigTOML(data string) error {
 		c.Vector.Embed.BackstopInterval = file.Vector.Embed.BackstopInterval
 	}
 	c.mergeRecallExtractTOML(file.Recall, meta)
+	if meta.IsDefined("fleet") {
+		c.Fleet = file.Fleet
+		c.Fleet.DSNEnv = strings.TrimSpace(c.Fleet.DSNEnv)
+		c.Fleet.TraceURL = strings.TrimSpace(c.Fleet.TraceURL)
+	}
 	if meta.IsDefined("insights") {
 		c.Insights = file.Insights
 		c.Insights.Endpoint = strings.TrimSpace(c.Insights.Endpoint)
