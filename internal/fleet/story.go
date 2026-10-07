@@ -87,7 +87,10 @@ type Tokens struct {
 
 // Run is one attempt at a story, keyed by the ledger's run identifier.
 type Run struct {
-	ID         string     `json:"id"`
+	ID string `json:"id"`
+	// Role is the fleet role that ran the attempt, from its start record:
+	// "worker" writes the change, "review" reviews its pull request.
+	Role       string     `json:"role,omitempty"`
 	Status     string     `json:"status"` // claimed, running, ok, failed
 	ClaimedAt  *time.Time `json:"claimed_at,omitempty"`
 	StartedAt  *time.Time `json:"started_at,omitempty"`
@@ -190,6 +193,9 @@ func BuildStory(issue Issue, events []Event) Story {
 			}
 			r.Status = "running"
 			r.StartedAt = &at
+			if ev.Role != "" {
+				r.Role = ev.Role
+			}
 			r.Branch = str(ev.Detail, "branch", r.Branch)
 			r.Model = str(ev.Detail, "model", r.Model)
 			r.TraceID = str(ev.Detail, "trace_id", r.TraceID)

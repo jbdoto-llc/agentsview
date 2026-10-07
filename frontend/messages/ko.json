@@ -2312,5 +2312,8 @@
   "stories_state_pr_open": "PR 열림",
   "stories_state_failed": "실패",
   "stories_state_closed": "닫힘",
-  "stories_state_done": "완료"
+  "stories_state_done": "완료",
+  "stories_role": "역할",
+  "stories_role_worker": "개발자",
+  "stories_role_review": "PR 리뷰"
 }

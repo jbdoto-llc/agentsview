@@ -15,6 +15,7 @@ export interface FleetRun {
   pr_number?: number;
   pr_url?: string;
   reason?: string;
+  role?: string;
   session_id?: string;
   started_at?: string;
   status: string;

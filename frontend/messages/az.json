@@ -2397,5 +2397,8 @@
   "stories_state_pr_open": "PR açıqdır",
   "stories_state_failed": "Uğursuz",
   "stories_state_closed": "Bağlıdır",
-  "stories_state_done": "Hazırdır"
+  "stories_state_done": "Hazırdır",
+  "stories_role": "Rol",
+  "stories_role_worker": "Tərtibatçı",
+  "stories_role_review": "PR baxışı"
 }
