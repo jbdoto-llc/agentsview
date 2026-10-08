@@ -2315,5 +2315,11 @@
   "stories_state_done": "已完成",
   "stories_role": "角色",
   "stories_role_worker": "開發者",
-  "stories_role_review": "PR 審查"
+  "stories_role_review": "PR 審查",
+  "stories_search_placeholder": "依 ID、標題或標籤搜尋故事",
+  "stories_search_clear": "清除搜尋",
+  "stories_no_matches": "沒有符合的故事",
+  "stories_page_range": "第 {start}–{end} 筆，共 {total} 筆",
+  "stories_page_previous": "上一頁",
+  "stories_page_next": "下一頁"
 }

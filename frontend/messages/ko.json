@@ -2315,5 +2315,11 @@
   "stories_state_done": "완료",
   "stories_role": "역할",
   "stories_role_worker": "개발자",
-  "stories_role_review": "PR 리뷰"
+  "stories_role_review": "PR 리뷰",
+  "stories_search_placeholder": "ID, 제목 또는 레이블로 스토리 검색",
+  "stories_search_clear": "검색 지우기",
+  "stories_no_matches": "일치하는 스토리가 없습니다",
+  "stories_page_range": "{total}개 중 {start}–{end}",
+  "stories_page_previous": "이전 페이지",
+  "stories_page_next": "다음 페이지"
 }

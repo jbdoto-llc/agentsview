@@ -28,9 +28,16 @@ func (fleetStoreSpy) GetSession(_ context.Context, id string) (*db.Session, erro
 type fakeLedger struct {
 	stories []fleet.Story
 	err     error
+	// query, when set, receives the query Stories was called with.
+	query *fleet.StoryQuery
 }
 
-func (f fakeLedger) Stories(context.Context, int) ([]fleet.Story, error) { return f.stories, f.err }
+func (f fakeLedger) Stories(_ context.Context, q fleet.StoryQuery) ([]fleet.Story, int, error) {
+	if f.query != nil {
+		*f.query = q
+	}
+	return f.stories, len(f.stories), f.err
+}
 
 func (f fakeLedger) Story(_ context.Context, id string) (*fleet.Story, error) {
 	if f.err != nil {
@@ -103,6 +110,18 @@ func TestFleetStoriesJoinSessions(t *testing.T) {
 
 	w = serveGet(t, s, "/api/v1/fleet/stories/nope")
 	assertRecorderStatus(t, w, http.StatusNotFound)
+}
+
+func TestFleetStoriesPassesQuery(t *testing.T) {
+	var got fleet.StoryQuery
+	s := fleetServer(t, fakeLedger{stories: []fleet.Story{{Issue: fleet.Issue{ID: "x-1"}}}, query: &got})
+
+	w := serveGet(t, s, "/api/v1/fleet/stories?q=bands&offset=50&limit=25")
+	assertRecorderStatus(t, w, http.StatusOK)
+	assert.Equal(t, fleet.StoryQuery{Search: "bands", Offset: 50, Limit: 25}, got)
+	assert.Equal(t, 1, decode[fleetStoriesResponse](t, w.Body.Bytes()).Total)
+
+	assertRecorderStatus(t, serveGet(t, s, "/api/v1/fleet/stories?offset=-1"), http.StatusBadRequest)
 }
 
 func TestFleetStoriesLedgerError(t *testing.T) {

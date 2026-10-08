@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { EmptyState } from "@kenn-io/kit-ui";
+  import { Button, EmptyState, SearchInput } from "@kenn-io/kit-ui";
   import { onDestroy } from "svelte";
   import { m } from "../../i18n/index.js";
   import { FleetService } from "../../api/generated/index";
@@ -20,13 +20,43 @@
   let failed = $state(false);
   const read = new LatestRead();
 
-  const storyId = $derived(router.params.id ?? "");
+  const PAGE_SIZE = 50;
 
+  const storyId = $derived(router.params.id ?? "");
+  const query = $derived(router.params.q ?? "");
+  const page = $derived(Math.max(1, Number.parseInt(router.params.page ?? "1", 10) || 1));
+
+  // The search box leads the URL by one debounce; it follows the URL when
+  // history moves it (back/forward).
+  let search = $state("");
+  let searchTimer: ReturnType<typeof setTimeout> | undefined;
+  let pageEl: HTMLDivElement | undefined = $state();
   $effect(() => {
-    void load(storyId);
+    search = query;
   });
 
-  async function load(id: string) {
+  $effect(() => {
+    void load(storyId, query, page);
+  });
+
+  function listParams(q: string, p: number): Record<string, string> {
+    const params: Record<string, string> = {};
+    if (q) params.q = q;
+    if (p > 1) params.page = String(p);
+    return params;
+  }
+
+  function scheduleSearch() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => router.replace("stories", listParams(search.trim(), 1)), 250);
+  }
+
+  function goToPage(p: number) {
+    router.navigate("stories", listParams(query, p));
+    pageEl?.scrollIntoView({ block: "start" });
+  }
+
+  async function load(id: string, q: string, p: number) {
     const signal = read.begin();
     loading = true;
     failed = false;
@@ -36,7 +66,10 @@
         if (!read.isCurrent(signal)) return;
         detail = res;
       } else {
-        const res = await FleetService.getApiV1FleetStories({ limit: 200 }, { signal });
+        const res = await FleetService.getApiV1FleetStories(
+          { q: q || undefined, offset: (p - 1) * PAGE_SIZE, limit: PAGE_SIZE },
+          { signal },
+        );
         if (!read.isCurrent(signal)) return;
         list = res;
       }
@@ -48,7 +81,10 @@
     }
   }
 
-  onDestroy(() => read.cancel());
+  onDestroy(() => {
+    read.cancel();
+    clearTimeout(searchTimer);
+  });
 
   function openStory(e: MouseEvent, id: string) {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
@@ -96,7 +132,7 @@
   }
 </script>
 
-<div class="stories-page">
+<div class="stories-page" bind:this={pageEl}>
   {#if storyId}
     <a class="back-link" href={router.buildHref("stories")} onclick={backToList}>← {m.stories_back()}</a>
   {/if}
@@ -198,9 +234,19 @@
     </header>
     {#if !list.enabled}
       <EmptyState title={m.stories_not_configured()} />
-    {:else if list.stories.length === 0}
-      <EmptyState title={m.stories_empty()} />
     {:else}
+      <SearchInput
+        class="stories-search"
+        bind:value={search}
+        oninput={scheduleSearch}
+        placeholder={m.stories_search_placeholder()}
+        ariaLabel={m.stories_search_placeholder()}
+        clearLabel={m.stories_search_clear()}
+        block
+      />
+      {#if list.stories.length === 0}
+        <EmptyState title={query ? m.stories_no_matches() : m.stories_empty()} />
+      {:else}
       <table class="stories-table">
         <thead>
           <tr>
@@ -234,6 +280,21 @@
           {/each}
         </tbody>
       </table>
+      {@const start = (page - 1) * PAGE_SIZE + 1}
+      <nav class="pager">
+        <span class="muted">
+          {m.stories_page_range({ start, end: start + list.stories.length - 1, total: list.total })}
+        </span>
+        <Button size="sm" surface="soft" label={m.stories_page_previous()} disabled={page <= 1} onclick={() => goToPage(page - 1)} />
+        <Button
+          size="sm"
+          surface="soft"
+          label={m.stories_page_next()}
+          disabled={start + list.stories.length - 1 >= list.total}
+          onclick={() => goToPage(page + 1)}
+        />
+      </nav>
+      {/if}
     {/if}
   {/if}
 </div>
@@ -279,6 +340,19 @@
 
   .stories-header p {
     margin: 4px 0 16px;
+    font-size: 13px;
+  }
+
+  .stories-page :global(.stories-search) {
+    margin-bottom: 12px;
+  }
+
+  .pager {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
     font-size: 13px;
   }
 

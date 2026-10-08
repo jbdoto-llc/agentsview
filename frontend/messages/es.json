@@ -2400,5 +2400,11 @@
   "stories_state_done": "Hecha",
   "stories_role": "Rol",
   "stories_role_worker": "Desarrollador",
-  "stories_role_review": "Revisión de PR"
+  "stories_role_review": "Revisión de PR",
+  "stories_search_placeholder": "Buscar historias por ID, título o etiqueta",
+  "stories_search_clear": "Borrar búsqueda",
+  "stories_no_matches": "Ninguna historia coincide",
+  "stories_page_range": "{start}–{end} de {total}",
+  "stories_page_previous": "Página anterior",
+  "stories_page_next": "Página siguiente"
 }
