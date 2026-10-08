@@ -129,6 +129,22 @@ func TestBuildStory(t *testing.T) {
 			},
 		},
 		{
+			name:  "runs carry the role from their start record",
+			issue: open,
+			events: []Event{
+				ev(0, "claimed", "w-1", nil),
+				{At: at(1), Role: "worker", Name: "worker_started", Run: "w-1"},
+				ev(2, "worker_finished", "w-1", ok),
+				{At: at(3), Role: "review", Name: "worker_started", Run: "r-1"},
+				{At: at(4), Role: "review", Name: "worker_finished", Run: "r-1", Detail: finished("ok", nil)},
+			},
+			state: "done", attempts: 2, cost: 0.1, statuses: []string{"ok", "ok"},
+			check: func(t *testing.T, s Story) {
+				assert.Equal(t, "worker", s.Runs[0].Role)
+				assert.Equal(t, "review", s.Runs[1].Role)
+			},
+		},
+		{
 			name:  "legacy records without run ids",
 			issue: open,
 			events: []Event{

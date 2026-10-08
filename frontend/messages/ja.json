@@ -2383,5 +2383,8 @@
   "stories_state_pr_open": "PR オープン",
   "stories_state_failed": "失敗",
   "stories_state_closed": "クローズ",
-  "stories_state_done": "完了"
+  "stories_state_done": "完了",
+  "stories_role": "ロール",
+  "stories_role_worker": "開発者",
+  "stories_role_review": "PR レビュー"
 }

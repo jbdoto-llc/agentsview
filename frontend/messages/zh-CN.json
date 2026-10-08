@@ -2312,5 +2312,8 @@
   "stories_state_pr_open": "PR 已打开",
   "stories_state_failed": "失败",
   "stories_state_closed": "已关闭",
-  "stories_state_done": "已完成"
+  "stories_state_done": "已完成",
+  "stories_role": "角色",
+  "stories_role_worker": "开发者",
+  "stories_role_review": "PR 审查"
 }

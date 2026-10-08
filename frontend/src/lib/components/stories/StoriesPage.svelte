@@ -61,6 +61,21 @@
     router.navigate("stories");
   }
 
+  function roleLabel(role: string | null | undefined): string {
+    switch (role) {
+      case "worker":
+        return m.stories_role_worker();
+      case "review":
+        return m.stories_role_review();
+      default:
+        return role ?? "";
+    }
+  }
+
+  function sessionRole(runs: { session_id?: string; role?: string }[], id: string): string {
+    return roleLabel(runs.find((r) => r.session_id === id)?.role);
+  }
+
   function stateLabel(state: string): string {
     switch (state) {
       case "running":
@@ -115,7 +130,9 @@
       {:else}
         <ul class="session-list">
           {#each story.sessions as session (session.id)}
+            {@const role = sessionRole(story.runs, session.id)}
             <li>
+              {#if role}<span class="label">{role}</span>{/if}
               {#if session.exists}
                 <a href={router.buildSessionHref(session.id)}>{session.display_name || session.id}</a>
                 <span class="muted">{session.machine} · {session.project}</span>
@@ -140,6 +157,7 @@
               {#if run.started_at}<span class="muted">{formatRelativeTime(run.started_at)}</span>{/if}
             </div>
             <dl class="run-facts">
+              {#if run.role}<dt>{m.stories_role()}</dt><dd>{roleLabel(run.role)}</dd>{/if}
               {#if run.duration_s}<dt>{m.stories_duration()}</dt><dd>{formatDuration(run.duration_s * 1000)}</dd>{/if}
               {#if run.turns}<dt>{m.stories_turns()}</dt><dd>{run.turns}</dd>{/if}
               {#if run.cost_usd}<dt>{m.stories_col_cost()}</dt><dd>{formatUSD(run.cost_usd)}</dd>{/if}

@@ -2394,5 +2394,8 @@
   "stories_state_pr_open": "PR ouverte",
   "stories_state_failed": "Échec",
   "stories_state_closed": "Fermé",
-  "stories_state_done": "Terminé"
+  "stories_state_done": "Terminé",
+  "stories_role": "Rôle",
+  "stories_role_worker": "Développeur",
+  "stories_role_review": "Revue de PR"
 }
