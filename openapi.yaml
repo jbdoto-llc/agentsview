@@ -4749,11 +4749,15 @@ components:
           items:
             $ref: "#/components/schemas/FleetStory"
           type: array
+        total:
+          format: int64
+          type: integer
         trace_url_template:
           type: string
       required:
         - enabled
         - stories
+        - total
       type: object
     FleetStory:
       additionalProperties: false
@@ -12532,6 +12536,23 @@ paths:
     get:
       operationId: get-api-v1-fleet-stories
       parameters:
+        - description: Keep stories whose id, title, or a label contains this text, ignoring case
+          explode: false
+          in: query
+          name: q
+          schema:
+            description: Keep stories whose id, title, or a label contains this text, ignoring case
+            maxLength: 200
+            type: string
+        - description: Matching stories to skip, most recent activity first
+          explode: false
+          in: query
+          name: offset
+          schema:
+            description: Matching stories to skip, most recent activity first
+            format: int64
+            minimum: 0
+            type: integer
         - description: Maximum stories to return, most recent activity first
           explode: false
           in: query

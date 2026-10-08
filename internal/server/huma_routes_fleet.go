@@ -19,7 +19,9 @@ func (s *Server) registerFleetRoutes() {
 }
 
 type fleetStoriesInput struct {
-	Limit int `query:"limit" default:"200" minimum:"1" maximum:"1000" doc:"Maximum stories to return, most recent activity first"`
+	Q      string `query:"q" maxLength:"200" doc:"Keep stories whose id, title, or a label contains this text, ignoring case"`
+	Offset int    `query:"offset" minimum:"0" doc:"Matching stories to skip, most recent activity first"`
+	Limit  int    `query:"limit" default:"200" minimum:"1" maximum:"1000" doc:"Maximum stories to return, most recent activity first"`
 }
 
 type fleetStoryInput struct {
@@ -45,6 +47,8 @@ type fleetStoriesResponse struct {
 	// Enabled is false when no fleet ledger is configured.
 	Enabled bool         `json:"enabled"`
 	Stories []fleetStory `json:"stories"`
+	// Total is how many stories match the query across all pages.
+	Total int `json:"total"`
 	// TraceURLTemplate links a run's trace; {trace_id} is replaced.
 	TraceURLTemplate string `json:"trace_url_template,omitempty"`
 }
@@ -121,7 +125,8 @@ func (s *Server) humaListFleetStories(
 		return &jsonOutput[fleetStoriesResponse]{Body: resp}, nil
 	}
 	resp.Enabled = true
-	stories, err := l.Stories(ctx, in.Limit)
+	stories, total, err := l.Stories(ctx, fleet.StoryQuery{Search: in.Q, Offset: in.Offset, Limit: in.Limit})
+	resp.Total = total
 	if err != nil {
 		return nil, internalError("list fleet stories", err)
 	}

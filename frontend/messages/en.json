@@ -2398,5 +2398,11 @@
   "stories_state_done": "Done",
   "stories_role": "Role",
   "stories_role_worker": "Developer",
-  "stories_role_review": "PR review"
+  "stories_role_review": "PR review",
+  "stories_search_placeholder": "Search stories by id, title, or label",
+  "stories_search_clear": "Clear search",
+  "stories_no_matches": "No stories match",
+  "stories_page_range": "{start}–{end} of {total}",
+  "stories_page_previous": "Previous page",
+  "stories_page_next": "Next page"
 }

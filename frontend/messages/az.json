@@ -2400,5 +2400,11 @@
   "stories_state_done": "Hazırdır",
   "stories_role": "Rol",
   "stories_role_worker": "Tərtibatçı",
-  "stories_role_review": "PR baxışı"
+  "stories_role_review": "PR baxışı",
+  "stories_search_placeholder": "Hekayələri ID, başlıq və ya etiketə görə axtarın",
+  "stories_search_clear": "Axtarışı təmizlə",
+  "stories_no_matches": "Uyğun hekayə yoxdur",
+  "stories_page_range": "{total} nəticədən {start}–{end}",
+  "stories_page_previous": "Əvvəlki səhifə",
+  "stories_page_next": "Növbəti səhifə"
 }

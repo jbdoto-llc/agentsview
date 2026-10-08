@@ -14,11 +14,22 @@ import (
 // ErrNotFound reports that a story id is in none of the configured ledgers.
 var ErrNotFound = errors.New("story not found")
 
+// StoryQuery selects a page of stories.
+type StoryQuery struct {
+	// Search keeps stories whose id, title, or a label contains it,
+	// ignoring case. Empty keeps every story.
+	Search string
+	Offset int
+	// Limit caps the page size; zero or less means no cap.
+	Limit int
+}
+
 // Ledger reads fleet stories.
 type Ledger interface {
-	// Stories returns the issues that have fleet events, most recent
-	// activity first, without their event lists.
-	Stories(ctx context.Context, limit int) ([]Story, error)
+	// Stories returns one page of the issues that have fleet events, most
+	// recent activity first, without their event lists, and how many
+	// stories match the query in total.
+	Stories(ctx context.Context, q StoryQuery) ([]Story, int, error)
 	// Story returns one story with its events.
 	Story(ctx context.Context, id string) (*Story, error)
 }
@@ -48,12 +59,12 @@ func NewSQLLedger(db *sql.DB, databases []string) (*SQLLedger, error) {
 }
 
 // Stories implements Ledger.
-func (l *SQLLedger) Stories(ctx context.Context, limit int) ([]Story, error) {
+func (l *SQLLedger) Stories(ctx context.Context, q StoryQuery) ([]Story, int, error) {
 	var out []Story
 	for _, d := range l.databases {
 		events, err := l.events(ctx, d, "")
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 		ids := make([]string, 0, len(events))
 		for id := range events {
@@ -61,7 +72,7 @@ func (l *SQLLedger) Stories(ctx context.Context, limit int) ([]Story, error) {
 		}
 		issues, err := l.issues(ctx, d, ids)
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 		for _, is := range issues {
 			s := BuildStory(is, events[is.ID])
@@ -70,13 +81,41 @@ func (l *SQLLedger) Stories(ctx context.Context, limit int) ([]Story, error) {
 		}
 	}
 	sort.SliceStable(out, func(i, j int) bool { return out[i].LastEvent.After(out[j].LastEvent) })
-	if limit > 0 && len(out) > limit {
-		out = out[:limit]
+	page, total := pageStories(out, q)
+	return page, total, nil
+}
+
+// pageStories filters stories by q.Search and cuts out the requested page.
+func pageStories(stories []Story, q StoryQuery) ([]Story, int) {
+	matched := stories
+	if term := strings.ToLower(strings.TrimSpace(q.Search)); term != "" {
+		matched = nil
+		for _, s := range stories {
+			if storyMatches(s, term) {
+				matched = append(matched, s)
+			}
+		}
 	}
-	if out == nil {
-		out = []Story{}
+	total := len(matched)
+	start := min(max(q.Offset, 0), total)
+	end := total
+	if q.Limit > 0 {
+		end = min(start+q.Limit, total)
 	}
-	return out, nil
+	page := append([]Story{}, matched[start:end]...)
+	return page, total
+}
+
+func storyMatches(s Story, term string) bool {
+	if strings.Contains(strings.ToLower(s.ID), term) || strings.Contains(strings.ToLower(s.Title), term) {
+		return true
+	}
+	for _, label := range s.Labels {
+		if strings.Contains(strings.ToLower(label), term) {
+			return true
+		}
+	}
+	return false
 }
 
 // Story implements Ledger.

@@ -59,9 +59,10 @@ func TestSQLLedgerStories(t *testing.T) {
 	l, err := NewSQLLedger(ledgerDB(t), []string{"alpha", "beta"})
 	require.NoError(t, err)
 
-	stories, err := l.Stories(context.Background(), 0)
+	stories, total, err := l.Stories(context.Background(), StoryQuery{})
 	require.NoError(t, err)
 	require.Len(t, stories, 2, "only issues with fleet events are stories")
+	assert.Equal(t, 2, total)
 	assert.Equal(t, "b-1", stories[0].ID, "most recent activity first")
 	assert.Equal(t, "beta", stories[0].Ledger)
 	assert.Equal(t, "closed", stories[0].State)
@@ -71,9 +72,47 @@ func TestSQLLedgerStories(t *testing.T) {
 	assert.Equal(t, []string{"s-1"}, stories[1].SessionIDs)
 	assert.Nil(t, stories[1].Events, "list view omits events")
 
-	limited, err := l.Stories(context.Background(), 1)
+	limited, total, err := l.Stories(context.Background(), StoryQuery{Limit: 1})
 	require.NoError(t, err)
 	assert.Len(t, limited, 1)
+	assert.Equal(t, 2, total, "total counts every match, not the page")
+}
+
+func TestPageStories(t *testing.T) {
+	stories := []Story{
+		{Issue: Issue{ID: "a-1", Title: "Uncertainty bands", Labels: []string{"spike"}}},
+		{Issue: Issue{ID: "a-2", Title: "Lot regions", Labels: []string{"has-pr"}}},
+		{Issue: Issue{ID: "b-1", Title: "Bump checkout action"}},
+	}
+	tests := []struct {
+		name  string
+		q     StoryQuery
+		ids   []string
+		total int
+	}{
+		{"no query returns everything", StoryQuery{}, []string{"a-1", "a-2", "b-1"}, 3},
+		{"title match ignores case", StoryQuery{Search: "LOT"}, []string{"a-2"}, 1},
+		{"id match", StoryQuery{Search: "b-"}, []string{"b-1"}, 1},
+		{"label match", StoryQuery{Search: "spike"}, []string{"a-1"}, 1},
+		{"surrounding space is ignored", StoryQuery{Search: "  bands "}, []string{"a-1"}, 1},
+		{"no match", StoryQuery{Search: "zzz"}, []string{}, 0},
+		{"first page", StoryQuery{Limit: 2}, []string{"a-1", "a-2"}, 3},
+		{"second page", StoryQuery{Offset: 2, Limit: 2}, []string{"b-1"}, 3},
+		{"offset past the end", StoryQuery{Offset: 9, Limit: 2}, []string{}, 3},
+		{"negative offset starts at zero", StoryQuery{Offset: -1, Limit: 1}, []string{"a-1"}, 3},
+		{"search then page", StoryQuery{Search: "a-", Offset: 1, Limit: 1}, []string{"a-2"}, 2},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			page, total := pageStories(stories, tt.q)
+			ids := []string{}
+			for _, s := range page {
+				ids = append(ids, s.ID)
+			}
+			assert.Equal(t, tt.ids, ids)
+			assert.Equal(t, tt.total, total)
+		})
+	}
 }
 
 func TestSQLLedgerStory(t *testing.T) {

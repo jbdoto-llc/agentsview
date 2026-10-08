@@ -4,6 +4,16 @@
 
 export type GetApiV1FleetStoriesParams = {
   /**
+   * Keep stories whose id, title, or a label contains this text, ignoring case
+   * @maxLength 200
+   */
+  q?: string;
+  /**
+   * Matching stories to skip, most recent activity first
+   * @minimum 0
+   */
+  offset?: number;
+  /**
    * Maximum stories to return, most recent activity first
    * @minimum 1
    * @maximum 1000

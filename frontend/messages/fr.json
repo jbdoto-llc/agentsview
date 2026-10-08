@@ -2397,5 +2397,11 @@
   "stories_state_done": "Terminé",
   "stories_role": "Rôle",
   "stories_role_worker": "Développeur",
-  "stories_role_review": "Revue de PR"
+  "stories_role_review": "Revue de PR",
+  "stories_search_placeholder": "Rechercher des stories par ID, titre ou libellé",
+  "stories_search_clear": "Effacer la recherche",
+  "stories_no_matches": "Aucune story ne correspond",
+  "stories_page_range": "{start}–{end} sur {total}",
+  "stories_page_previous": "Page précédente",
+  "stories_page_next": "Page suivante"
 }

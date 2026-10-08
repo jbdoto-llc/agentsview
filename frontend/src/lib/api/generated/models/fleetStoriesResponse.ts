@@ -6,5 +6,6 @@ import type { FleetStory } from "./fleetStory.ts";
 export interface FleetStoriesResponse {
   enabled: boolean;
   stories: FleetStory[];
+  total: number;
   trace_url_template?: string;
 }

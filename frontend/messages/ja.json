@@ -2386,5 +2386,11 @@
   "stories_state_done": "完了",
   "stories_role": "ロール",
   "stories_role_worker": "開発者",
-  "stories_role_review": "PR レビュー"
+  "stories_role_review": "PR レビュー",
+  "stories_search_placeholder": "ID、タイトル、ラベルでストーリーを検索",
+  "stories_search_clear": "検索をクリア",
+  "stories_no_matches": "一致するストーリーはありません",
+  "stories_page_range": "{total} 件中 {start}–{end} 件",
+  "stories_page_previous": "前のページ",
+  "stories_page_next": "次のページ"
 }
